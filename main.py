@@ -35,12 +35,12 @@ def get_captcha():
     act.perform()
     print("downloading the picture...")
     pyautogui.typewrite(['down', 'down', 'enter'])
-    time.sleep(1)
+    time.sleep(0.5)
     pyautogui.typewrite(['enter'])
     time.sleep(0.5)
     print("tesseracting...")
     os.system("tesseract ~/Downloads/AuthenCodeImage.jpeg res --psm 6")
-    time.sleep(1)
+    time.sleep(0.5)
     print("captcha = " + str(open("res.txt").read()))
     return open("res.txt").read()
 
@@ -62,7 +62,10 @@ def login(num):
                 break
 
 def work(num):
-    op.get(URL)
+    try:
+        op.get(URL)
+    except:
+        return 
     print("work " + str(num))
     login(num)
     tmpqwq = 1
@@ -84,9 +87,9 @@ def work(num):
     if not_ok == 1:
         return 
     op.switch_to.frame(tmp)
-    time.sleep(1)
+    time.sleep(0.4)
     wait.until(EC.presence_of_element_located((By.LINK_TEXT, "绑定信息"))).click()
-    time.sleep(1)
+    time.sleep(0.4)
     ele = op.find_elements(By.CSS_SELECTOR, "[bgcolor=\"DAE1EF\"]+td")
     ans = int()
     for e in ele:
@@ -105,5 +108,10 @@ if __name__ == '__main__':
     while 1:
         num = nxt(num) 
         work(num)
-        if int(num) > 220:
+        if int(num) > 240:
             break
+    with open("result.txt", 'a') as out:
+        for n in valiable:
+            out.write(str(n))
+
+    op.quit()

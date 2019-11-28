@@ -12,7 +12,7 @@ from selenium.common.exceptions import UnexpectedAlertPresentException
 
 op = webdriver.Chrome()
 URL = 'http://172.16.254.82/selfLogon.do'
-num = '0200'
+num = '0000'
 wait = WebDriverWait(op, 10)
 name = "JXJJXX"
 valiable = list()
@@ -74,9 +74,9 @@ def work(num):
     if not_ok == 1:
         return 
     op.switch_to.frame(tmp)
-    time.sleep(0.1)
+    time.sleep(0.5)
     wait.until(EC.presence_of_element_located((By.LINK_TEXT, "绑定信息"))).click()
-    time.sleep(0.1)
+    time.sleep(0.5)
     ele = op.find_elements(By.CSS_SELECTOR, "[bgcolor=\"DAE1EF\"]+td")
     ans = int()
     for e in ele:
@@ -84,6 +84,7 @@ def work(num):
         for s in _str:
             if s == ':':
                 ans += 1
+    print(str(num) + " = " + str(ans))
     if ans < 15:
         return True
     else:

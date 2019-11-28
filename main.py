@@ -12,9 +12,9 @@ from selenium.common.exceptions import UnexpectedAlertPresentException
 
 op = webdriver.Chrome()
 URL = 'http://172.16.254.82/selfLogon.do'
-num = '0164'
+num = '0000'
 wait = WebDriverWait(op, 10)
-name = "JXJJXX"
+name = "JXJJZX"
 valiable = list()
 
 def nxt(num):

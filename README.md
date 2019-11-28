@@ -1,3 +1,3 @@
-An little spider based on selenium
+一个基于 selenium 的爬虫小应用
 
-Be used as to find the valiable-accounts of JXFLS WIFI
+用来抓取 JX-WIFI 上的合法帐号

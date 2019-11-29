@@ -128,10 +128,12 @@ class register:
                     nyear = int(time.strftime("%Y", time.localtime()))
                     nmonth = int(time.strftime("%m", time.localtime()))
                     nday = int(time.strftime("%d", time.localtime()))
-                    if year < nyear or day < nday or month < nmonth:
-                        is_ok = 0
-                    else:
-                        is_ok = 1
+                    if (year > nyear 
+                        or (year == nyear and month > nmonth) 
+                        or (year == nyear and month == nmonth and day > nday
+                    )):
+                        is_ok = True
+                    else: is_ok = False
         print(is_ok)
         time.sleep(0.5)
         """判断 MAC 地址"""
